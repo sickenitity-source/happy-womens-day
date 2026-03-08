@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Power Lever</title>
-
+<title>Hammer Game Surprise</title>
 <style>
-
 body{
 margin:0;
 height:100vh;
@@ -13,179 +11,121 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-family:Segoe UI, sans-serif;
-background:linear-gradient(135deg,#000000,#ff4da6,#000000);
+background:linear-gradient(135deg,#1e90ff,#ffe4e1,#b0c4de);
 overflow:hidden;
-color:white;
+color:#000;
 }
-
 .container{
-background:#111;
+background:#fff0f5;
 padding:40px;
 border-radius:20px;
 text-align:center;
 width:420px;
-box-shadow:0 0 25px #ff4da6;
-z-index:2;
+box-shadow:0 0 25px #1e90ff;
+position:relative;
 }
-
 h1{
-color:#ff4da6;
+color:#1e90ff;
 }
-
-#triggerBtn{
-margin-top:20px;
-padding:15px 30px;
-font-size:18px;
-background:#ff4da6;
+#targetBtn{
+width:120px;
+height:50px;
+font-size:16px;
 border:none;
-border-radius:15px;
+border-radius:10px;
+background:#ff69b4;
 color:white;
-cursor:pointer;
+position:relative;
 }
-
-.meter{
+#healthBar{
+width:120px;
+height:15px;
+background:#ccc;
+border-radius:8px;
+margin:10px auto;
+}
+#healthFill{
+height:100%;
 width:100%;
-background:#333;
-border-radius:20px;
-overflow:hidden;
-margin-top:15px;
-display:none;
+background:#1e90ff;
+border-radius:8px;
+transition:width 0.2s;
 }
-
-.meter-fill{
-height:20px;
-width:0%;
-background:#ff4da6;
-transition:width 1.5s;
+#hammer{
+width:60px;
+position:absolute;
+top:0;
+left:50%;
+margin-left:-30px;
+cursor:pointer;
+transition:transform 0.1s;
 }
-
-.rose{
-font-size:40px;
-margin-top:15px;
-transform:scale(0);
-transition:transform 1s;
-}
-
 #message{
 display:none;
 font-size:20px;
 margin-top:15px;
-color:#fff;
+color:#000;
 }
-
-#strengthMsg{
-display:none;
-margin-top:10px;
-font-weight:bold;
-color:#ff4da6;
-}
-
-.petal{
-position:absolute;
-color:#ff66cc;
-font-size:18px;
-animation:fall 5s linear infinite;
-}
-
-@keyframes fall{
-from{transform:translateY(-10vh) rotate(0deg);}
-to{transform:translateY(100vh) rotate(360deg);}
-}
-
-.heart{
-position:absolute;
-color:#ff4da6;
-font-size:18px;
-animation:floatUp 6s linear infinite;
-}
-
-@keyframes floatUp{
-from{transform:translateY(100vh);}
-to{transform:translateY(-10vh);}
-}
-
 </style>
 </head>
 <body>
-
 <div class="container">
-
-<h1>Power Lever</h1>
-<p>Press the button for my strongest piggy 🐷</p>
-
-<button id="triggerBtn">Pull Lever</button>
-
-<div class="meter">
-<div class="meter-fill" id="meterFill"></div>
-</div>
-
-<div class="rose" id="rose">🌹</div>
-
+<h1>Smash the Button!</h1>
+<p>Use the hammer to hit the button as fast as you can 🛠️</p>
+<img src="https://i.ibb.co/TrQx5bH/hammer.png" id="hammer">
+<div id="healthBar"><div id="healthFill"></div></div>
+<button id="targetBtn">Hit Me!</button>
 <p id="message">
-Happy Women's Day to my strongest piggy 🐷  
-Life would be boring without you.
+Happy Women's Day, my strongest woman Pratiksha.  
+You really mean a lot to me.
 </p>
-
-<p id="strengthMsg">
-See? That's why you're the strongest.
-</p>
-
 </div>
-
 <script>
-
-let triggerBtn = document.getElementById("triggerBtn");
+let hammer = document.getElementById("hammer");
+let targetBtn = document.getElementById("targetBtn");
+let healthFill = document.getElementById("healthFill");
 let message = document.getElementById("message");
-let meter = document.querySelector(".meter");
-let meterFill = document.getElementById("meterFill");
-let rose = document.getElementById("rose");
-let strengthMsg = document.getElementById("strengthMsg");
 
-function activateGift() {
-    // show meter
-    meter.style.display = "block";
-    setTimeout(()=>{ meterFill.style.width = "100%"; }, 200);
-    
-    // show rose
-    rose.style.transform = "scale(1)";
-    
-    // show messages
-    message.style.display = "block";
-    setTimeout(()=>{ strengthMsg.style.display = "block"; }, 1700);
-    
-    createPetals();
-    triggerBtn.disabled = true; // prevent double activation
-}
+let maxHealth = 100;
+let currentHealth = maxHealth;
 
-// create petals
-function createPetals(){
-    for(let i=0;i<20;i++){
-        let petal=document.createElement("div");
-        petal.className="petal";
-        petal.innerHTML="🌸";
-        petal.style.left=Math.random()*100+"vw";
-        petal.style.animationDuration=(3+Math.random()*4)+"s";
-        document.body.appendChild(petal);
+// hammer swing animation
+let swinging = false;
+hammer.addEventListener("mousedown", () => { swinging=true; });
+hammer.addEventListener("mouseup", () => { swinging=false; hammer.style.transform='rotate(0deg)'; });
+hammer.addEventListener("mousemove", (e) => {
+    if(swinging){
+        let x = e.clientX;
+        let y = e.clientY;
+        hammer.style.left = x - 30 + "px";
+        hammer.style.top = y - 30 + "px";
     }
-}
+});
 
-// create hearts
-function createHearts(){
-    for(let i=0;i<15;i++){
-        let heart=document.createElement("div");
-        heart.className="heart";
-        heart.innerHTML="♥";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.animationDuration=(4+Math.random()*4)+"s";
-        document.body.appendChild(heart);
+// detect hammer hit
+targetBtn.addEventListener("click", () => {
+    currentHealth -= 20;
+    if(currentHealth < 0) currentHealth = 0;
+    healthFill.style.width = currentHealth + "%";
+    hammer.style.transform = "rotate(-30deg)";
+    setTimeout(()=>{hammer.style.transform='rotate(0deg)';},100);
+
+    if(currentHealth === 0){
+        message.style.display = "block";
+        targetBtn.disabled = true;
     }
-}
+});
 
-createHearts();
-
-triggerBtn.addEventListener("click", activateGift);
-
+// for mobile: allow hammer drag via touch
+hammer.addEventListener("touchstart", e => { swinging=true; });
+hammer.addEventListener("touchend", e => { swinging=false; hammer.style.transform='rotate(0deg)'; });
+hammer.addEventListener("touchmove", e => {
+    if(swinging){
+        let touch = e.touches[0];
+        hammer.style.left = touch.clientX - 30 + "px";
+        hammer.style.top = touch.clientY - 30 + "px";
+    }
+});
 </script>
-
 </body>
 </html>
