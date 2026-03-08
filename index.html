@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Power Lever</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Segoe UI, sans-serif;
+background:linear-gradient(135deg,#000000,#ff4da6,#000000);
+overflow:hidden;
+color:white;
+}
+
+.container{
+background:#111;
+padding:40px;
+border-radius:20px;
+text-align:center;
+width:420px;
+box-shadow:0 0 25px #ff4da6;
+z-index:2;
+}
+
+h1{
+color:#ff4da6;
+}
+
+#triggerBtn{
+margin-top:20px;
+padding:15px 30px;
+font-size:18px;
+background:#ff4da6;
+border:none;
+border-radius:15px;
+color:white;
+cursor:pointer;
+}
+
+.meter{
+width:100%;
+background:#333;
+border-radius:20px;
+overflow:hidden;
+margin-top:15px;
+display:none;
+}
+
+.meter-fill{
+height:20px;
+width:0%;
+background:#ff4da6;
+transition:width 1.5s;
+}
+
+.rose{
+font-size:40px;
+margin-top:15px;
+transform:scale(0);
+transition:transform 1s;
+}
+
+#message{
+display:none;
+font-size:20px;
+margin-top:15px;
+color:#fff;
+}
+
+#strengthMsg{
+display:none;
+margin-top:10px;
+font-weight:bold;
+color:#ff4da6;
+}
+
+.petal{
+position:absolute;
+color:#ff66cc;
+font-size:18px;
+animation:fall 5s linear infinite;
+}
+
+@keyframes fall{
+from{transform:translateY(-10vh) rotate(0deg);}
+to{transform:translateY(100vh) rotate(360deg);}
+}
+
+.heart{
+position:absolute;
+color:#ff4da6;
+font-size:18px;
+animation:floatUp 6s linear infinite;
+}
+
+@keyframes floatUp{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);}
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Power Lever</h1>
+<p>Press the button for my strongest piggy 🐷</p>
+
+<button id="triggerBtn">Pull Lever</button>
+
+<div class="meter">
+<div class="meter-fill" id="meterFill"></div>
+</div>
+
+<div class="rose" id="rose">🌹</div>
+
+<p id="message">
+Happy Women's Day to my strongest piggy 🐷  
+Life would be boring without you.
+</p>
+
+<p id="strengthMsg">
+See? That's why you're the strongest.
+</p>
+
+</div>
+
+<script>
+
+let triggerBtn = document.getElementById("triggerBtn");
+let message = document.getElementById("message");
+let meter = document.querySelector(".meter");
+let meterFill = document.getElementById("meterFill");
+let rose = document.getElementById("rose");
+let strengthMsg = document.getElementById("strengthMsg");
+
+function activateGift() {
+    // show meter
+    meter.style.display = "block";
+    setTimeout(()=>{ meterFill.style.width = "100%"; }, 200);
+    
+    // show rose
+    rose.style.transform = "scale(1)";
+    
+    // show messages
+    message.style.display = "block";
+    setTimeout(()=>{ strengthMsg.style.display = "block"; }, 1700);
+    
+    createPetals();
+    triggerBtn.disabled = true; // prevent double activation
+}
+
+// create petals
+function createPetals(){
+    for(let i=0;i<20;i++){
+        let petal=document.createElement("div");
+        petal.className="petal";
+        petal.innerHTML="🌸";
+        petal.style.left=Math.random()*100+"vw";
+        petal.style.animationDuration=(3+Math.random()*4)+"s";
+        document.body.appendChild(petal);
+    }
+}
+
+// create hearts
+function createHearts(){
+    for(let i=0;i<15;i++){
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="♥";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.animationDuration=(4+Math.random()*4)+"s";
+        document.body.appendChild(heart);
+    }
+}
+
+createHearts();
+
+triggerBtn.addEventListener("click", activateGift);
+
+</script>
+
+</body>
+</html>
