@@ -20,7 +20,7 @@ background:#fff0f5;
 padding:40px;
 border-radius:20px;
 text-align:center;
-width:420px;
+width:480px;
 box-shadow:0 0 25px #1e90ff;
 position:relative;
 }
@@ -35,7 +35,10 @@ border:none;
 border-radius:10px;
 background:#ff69b4;
 color:white;
-position:relative;
+position:absolute;
+top:250px;
+left:180px;
+transition:all 0.2s ease;
 }
 #healthBar{
 width:120px;
@@ -54,17 +57,26 @@ transition:width 0.2s;
 #hammer{
 width:60px;
 position:absolute;
-top:0;
-left:50%;
-margin-left:-30px;
+top:50px;
+left:200px;
 cursor:pointer;
 transition:transform 0.1s;
 }
 #message{
 display:none;
-font-size:20px;
-margin-top:15px;
+font-size:18px;
+margin-top:20px;
 color:#000;
+}
+.heart{
+position:absolute;
+color:#ff69b4;
+font-size:18px;
+animation:floatUp 6s linear infinite;
+}
+@keyframes floatUp{
+from{transform:translateY(100vh);}
+to{transform:translateY(-10vh);}
 }
 </style>
 </head>
@@ -76,8 +88,8 @@ color:#000;
 <div id="healthBar"><div id="healthFill"></div></div>
 <button id="targetBtn">Hit Me!</button>
 <p id="message">
-Happy Women's Day, my strongest woman Pratiksha.  
-You really mean a lot to me.
+As you defeated the button, I wish to God you defeat every life problem.  
+Happy Women's Day, Pratiksha! 🎉
 </p>
 </div>
 <script>
@@ -88,6 +100,8 @@ let message = document.getElementById("message");
 
 let maxHealth = 100;
 let currentHealth = maxHealth;
+let hits = 0;
+const totalHits = 5; // number of hits before button dies
 
 // hammer swing animation
 let swinging = false;
@@ -102,21 +116,7 @@ hammer.addEventListener("mousemove", (e) => {
     }
 });
 
-// detect hammer hit
-targetBtn.addEventListener("click", () => {
-    currentHealth -= 20;
-    if(currentHealth < 0) currentHealth = 0;
-    healthFill.style.width = currentHealth + "%";
-    hammer.style.transform = "rotate(-30deg)";
-    setTimeout(()=>{hammer.style.transform='rotate(0deg)';},100);
-
-    if(currentHealth === 0){
-        message.style.display = "block";
-        targetBtn.disabled = true;
-    }
-});
-
-// for mobile: allow hammer drag via touch
+// hammer touch support
 hammer.addEventListener("touchstart", e => { swinging=true; });
 hammer.addEventListener("touchend", e => { swinging=false; hammer.style.transform='rotate(0deg)'; });
 hammer.addEventListener("touchmove", e => {
@@ -124,6 +124,42 @@ hammer.addEventListener("touchmove", e => {
         let touch = e.touches[0];
         hammer.style.left = touch.clientX - 30 + "px";
         hammer.style.top = touch.clientY - 30 + "px";
+    }
+});
+
+// create floating hearts
+function createHearts(){
+    for(let i=0;i<15;i++){
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="♥";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.animationDuration=(4+Math.random()*4)+"s";
+        document.body.appendChild(heart);
+    }
+}
+createHearts();
+
+// button hit
+targetBtn.addEventListener("click", () => {
+    hits++;
+    currentHealth = maxHealth - (hits*(maxHealth/totalHits));
+    if(currentHealth < 0) currentHealth = 0;
+    healthFill.style.width = currentHealth + "%";
+    hammer.style.transform = "rotate(-30deg)";
+    setTimeout(()=>{hammer.style.transform='rotate(0deg)';},100);
+
+    // teleport button to random position
+    if(currentHealth > 0){
+        let container = document.querySelector(".container");
+        let maxX = container.offsetWidth - targetBtn.offsetWidth;
+        let maxY = container.offsetHeight - targetBtn.offsetHeight;
+        targetBtn.style.left = Math.random()*maxX + "px";
+        targetBtn.style.top = Math.random()*maxY + "px";
+    } else {
+        // final hit
+        message.style.display = "block";
+        targetBtn.disabled = true;
     }
 });
 </script>
